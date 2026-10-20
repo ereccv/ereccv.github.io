@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BLK360 – Workflow Import to CAD | Erec Castillo</title>
+<meta name="description" content="Scan-to-CAD workflow: BLK360 scanning, registration, RCP import to AutoCAD, and wall flatness / plumbness checks.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#1877F2;--dark:#0D47A1;--ink:#1c1e21;--mute:#65676b;--line:#dadde1;--soft:#f0f2f5;--r:12px}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{margin:0;font:16px/1.65 "IBM Plex Sans",system-ui,Segoe UI,Arial,sans-serif;color:var(--ink);background:#fff}
+a{color:var(--blue)}
+.top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.95);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.top div{max-width:1120px;margin:auto;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.top b{color:var(--dark);font-weight:600}.top a{text-decoration:none;font-weight:500;font-size:15px}
+header.hero{background:linear-gradient(135deg,var(--dark),var(--blue));color:#fff;padding:64px 20px 56px}
+.wrap{max-width:1080px;margin:auto}
+.tag{display:inline-block;font:500 12px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.16);padding:5px 10px;border-radius:99px}
+h1{font-size:clamp(30px,5vw,50px);line-height:1.1;margin:16px 0 14px;font-weight:700}
+.hero p{max-width:720px;font-size:18px;opacity:.95;margin:0}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:32px}
+.meta div{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:var(--r);padding:14px 16px}
+.meta small{display:block;font:500 11px "IBM Plex Mono",monospace;text-transform:uppercase;letter-spacing:.08em;opacity:.8}
+.meta span{font-weight:600}
+main{max-width:1120px;margin:auto;padding:0 20px}
+.sec{padding:52px 0 8px}
+h2{font-size:28px;line-height:1.2;margin:0 0 6px;color:var(--dark)}
+h3{font-size:18px;margin:28px 0 8px;color:var(--ink);border-left:4px solid var(--blue);padding-left:10px}
+.lead{color:var(--mute);margin:0 0 14px;font-size:17px}
+.two{display:grid;grid-template-columns:1.4fr 1fr;gap:28px;align-items:start}
+.card{background:var(--soft);border-radius:var(--r);padding:20px 22px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.card h3{margin-top:0;border:0;padding:0;color:var(--dark)}
+.card ul{margin:0;padding-left:18px}.card li{margin:4px 0}
+.flow{list-style:none;margin:20px 0 0;padding:0;display:grid;grid-template-columns:repeat(7,1fr);gap:0}
+.flow li{position:relative;padding:0 8px 0 0}
+.flow a{display:block;text-decoration:none;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:12px 10px;height:100%;box-shadow:0 1px 2px rgba(0,0,0,.05);transition:.15s;font-weight:500;font-size:14px;line-height:1.3}
+.flow a:hover{border-color:var(--blue);transform:translateY(-2px)}
+.flow span{display:block;font:500 12px "IBM Plex Mono",monospace;color:var(--blue);margin-bottom:4px}
+.flow li:not(:last-child)::after{content:"›";position:absolute;right:-2px;top:50%;transform:translateY(-50%);color:var(--blue);font-size:24px;font-weight:700;line-height:1}
+.stage{display:grid;grid-template-columns:64px 1fr;gap:18px;padding:36px 0;border-top:1px solid var(--line)}
+.num{width:52px;height:52px;border-radius:14px;background:var(--blue);color:#fff;display:grid;place-items:center;font:500 18px "IBM Plex Mono",monospace;box-shadow:0 4px 10px rgba(24,119,242,.3)}
+.steps{margin:0;padding:0;list-style:none;counter-reset:s}
+.steps li{counter-increment:s;position:relative;padding:8px 0 8px 40px;border-bottom:1px dashed var(--line)}
+.steps li:last-child{border:0}
+.steps li::before{content:counter(s);position:absolute;left:0;top:9px;width:26px;height:26px;border-radius:50%;background:#e7f0fe;color:var(--dark);font:600 13px "IBM Plex Mono",monospace;display:grid;place-items:center}
+.figs{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;margin-top:22px}
+.figs.one{grid-template-columns:minmax(0,760px)}
+figure{margin:0;background:#fff;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+figure a{display:block;background:#101418;cursor:zoom-in}
+figure img{display:block;width:100%;aspect-ratio:16/10;object-fit:contain}
+figcaption{padding:10px 14px 14px;font-size:14px;color:var(--mute);line-height:1.45}
+figcaption b{display:block;font:500 12px "IBM Plex Mono",monospace;color:var(--blue);margin-bottom:2px}
+.outs{list-style:none;padding:0;margin:14px 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.outs li{background:var(--soft);border-radius:var(--r);padding:16px;border-top:4px solid var(--blue)}
+.outs b{display:block;color:var(--dark);margin-bottom:4px}
+.plain{padding-left:20px}
+.tools{width:100%;border-collapse:collapse;font-size:15px;margin-top:10px}
+.tools th,.tools td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line)}
+.tools th{background:var(--soft);color:var(--dark);font-weight:600}
+.note{font-size:14px;color:var(--mute);background:#e7f0fe;border-radius:var(--r);padding:12px 16px;margin-top:18px}
+footer{margin-top:40px;background:var(--soft);padding:28px 20px;text-align:center;color:var(--mute);font-size:14px}
+#lb{position:fixed;inset:0;background:rgba(8,12,18,.94);z-index:50;display:none;flex-direction:column}
+#lb.on{display:flex}
+#lb .bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 16px;color:#fff;font-size:14px}
+#lb .sc{flex:1;overflow:auto;display:grid;place-items:center;padding:8px}
+#lb img{max-width:100%;max-height:100%;cursor:zoom-in}
+#lb img.z{max-width:none;max-height:none;width:220%;cursor:zoom-out}
+#lb .sc.zs{place-items:start}
+#lb button{background:rgba(255,255,255,.14);color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer}
+#lb button:hover{background:var(--blue)}
+@media(max-width:900px){.two{grid-template-columns:1fr}.flow{grid-template-columns:1fr 1fr;gap:10px}.flow li{padding:0}.flow li::after{display:none}}
+@media(max-width:600px){.stage{grid-template-columns:1fr;gap:10px;padding:28px 0}.num{width:44px;height:44px}.figs{grid-template-columns:1fr}.hero{padding:44px 20px 40px}}
+@media print{.top,#lb{display:none}figure{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="top"><div><b>Erec Castillo · CAD Portfolio</b><a href="../">&larr; Back to CV &amp; portfolio</a></div></div>
+<header class="hero"><div class="wrap">
+<span class="tag">CAD Drafting / Scan-to-CAD Workflow</span>
+<h1>BLK360 – Workflow Import to CAD</h1>
+<p>A step-by-step record of taking a Leica BLK360 scan from the scanner, through registration, into AutoCAD as an RCP point cloud, and then using the same data to check wall flatness, plumbness and room dimensions.</p>
+<div class="meta"><div><small>Category</small><span>CAD Drafting / Scan-to-CAD</span></div><div><small>Role</small><span>CAD drafting &amp; technical documentation (contributor)</span></div><div><small>Software</small><span>BLK360 app, Cyclone REGISTER 360, AutoCAD, ReCap, FARO BuildIT, CloudCompare</span></div></div>
+</div></header>
+<main>
+<section class="sec" id="overview"><div class="two"><div><h2>Project Overview</h2>
+<p class="lead">Why a scan belongs in a CAD workflow.</p>
+<p>The BLK360 captures a room as a point cloud. Once registered and published as RCP, the scan can be attached in AutoCAD, where the plan is traced with polylines and dimensioned. The same scan can be exported to E57 and analysed in FARO BuildIT or CloudCompare to check wall flatness and plumbness, which matters before preparing tile shop drawings.</p>
+<p>The workflow was tested on an Office Bathroom Test 1 scan. The notes were kept in a shared team notebook; this page reorganises them into one sequence with the original steps and terminology.</p></div>
+<div class="card"><h3>At a glance</h3><ul><li>Scanner: Leica BLK360</li><li>Registration: Cyclone REGISTER 360 (BLK Edition)</li><li>CAD format: RCP, attached in AutoCAD</li><li>Analysis format: E57 (from ReCap export)</li><li>Checks: squareness, flatness, plumbness, room dimensions</li></ul></div></div></section>
+<section class="sec" id="workflow"><h2>Workflow Process</h2><p class="lead">Seven stages, from scanner to checked wall. Select a stage to jump to it.</p>
+<ol class="flow"><li><a href="#s01"><span>01</span>Setting up</a></li><li><a href="#s02"><span>02</span>Scanning</a></li><li><a href="#s03"><span>03</span>Import to Data Storage App</a></li><li><a href="#s04"><span>04</span>App Navigation</a></li><li><a href="#s05"><span>05</span>Registration</a></li><li><a href="#s06"><span>06</span>Plotting to CAD</a></li><li><a href="#s07"><span>07</span>Wall checks</a></li></ol></section>
+<div style="height:28px"></div>
+<section class="stage" id="s01"><div class="num">01</div><div class="body"><h2>Setting up</h2><p class="lead">Prepare the BLK360 and connect to it from the laptop.</p><ol class="steps"><li>Turn on the BLK360; a green light shows around the bottom.</li><li>Connect the BLK Wi-Fi network to your laptop or computer.</li><li>Open the BLK360 manager, then click Find and Connect to the device.</li></ol></div></section><section class="stage" id="s02"><div class="num">02</div><div class="body"><h2>Scanning</h2><p class="lead">One scan per room, started from the scanner button or a mobile device.</p><ol class="steps"><li>Connect the scanner to the tripod.</li><li>Press the button to start the scan.</li><li>Once the scan is done, the bottom turns green.</li><li>One scan per room.</li></ol></div></section><section class="stage" id="s03"><div class="num">03</div><div class="body"><h2>Import to Data Storage App</h2><p class="lead">Move the scanned data off the scanner and onto the computer.</p><ol class="steps"><li>Connect the BLK Wi-Fi and go to the BLK manager app.</li><li>Click Find and Connect to the device.</li><li>Check the file that you scanned and hit Download.</li></ol></div></section><section class="stage" id="s04"><div class="num">04</div><div class="body"><h2>App Navigation & Sync</h2><p class="lead">Open the project, clean up the scan and sync it to the registration software.</p><ol class="steps"><li>Click the current project you need to work on.</li><li>Check whether anything needs to be cleaned, erased or removed.</li><li>From the mobile device, click Sync Server so it syncs to the registration software (Cyclone REGISTER 360).</li><li>Click Add Project. Note: Add Project previews all the projects on the mobile device.</li><li>Note: the more projects you have, the longer the sync takes.</li></ol></div></section><section class="stage" id="s05"><div class="num">05</div><div class="body"><h2>Registration & Export to RCP</h2><p class="lead">Register the scans in Cyclone REGISTER 360 (BLK Edition) and publish a point cloud for CAD.</p><ol class="steps"><li>Click Field 360, then choose Test Connect, and import. No targets were used in the tutorial example.</li><li>Tick Auto Cloud, then click Import.</li><li>After import, the next step is Review and Optimize. Options: TruSlicers, Bundle Cloud and SiteMap.</li><li>Click Optimize Bundle. When happy, click Finalize, then choose Accept and Publish.</li><li>Go to the Publish Options and convert to RCP for CAD software.</li></ol><div class="figs"><figure><a href="images/reg_import.jpg" data-lb><img loading="lazy" src="images/reg_import.jpg" alt="Cyclone REGISTER 360: importing the FIELD 360 data source with Auto Cloud ticked and no targets used."></a><figcaption><b>Fig. 5.1</b> Cyclone REGISTER 360: importing the FIELD 360 data source with Auto Cloud ticked and no targets used.</figcaption></figure><figure><a href="images/reg_bundle.jpg" data-lb><img loading="lazy" src="images/reg_bundle.jpg" alt="Review and Optimize: 2 setups, 1 link, 2,197,935 points, bundle error 0.002 m."></a><figcaption><b>Fig. 5.2</b> Review and Optimize: 2 setups, 1 link, 2,197,935 points, bundle error 0.002 m.</figcaption></figure><figure><a href="images/reg_report.jpg" data-lb><img loading="lazy" src="images/reg_report.jpg" alt="Registration Report with the publish options, where the RCP (Cloud) output is chosen."></a><figcaption><b>Fig. 5.3</b> Registration Report with the publish options, where the RCP (Cloud) output is chosen.</figcaption></figure></div></div></section><section class="stage" id="s06"><div class="num">06</div><div class="body"><h2>Plotting to CAD</h2><p class="lead">Attach the RCP scan in AutoCAD and trace the plan.</p><ol class="steps"><li>Open AutoCAD.</li><li>Type ATTACH in the command prompt.</li><li>Select the BLK360 RCP file, then click Open / Insert.</li><li>Check the units of your CAD model: type UNITS in the command prompt and select the unit to prepare (metre was selected).</li><li>Trace the laser plan using the Polyline command and add dimensions.</li></ol><div class="figs"><figure><a href="images/cad_units.jpg" data-lb><img loading="lazy" src="images/cad_units.jpg" alt="AutoCAD UNITS dialog: model units checked before attaching the scan (metre selected)."></a><figcaption><b>Fig. 6.1</b> AutoCAD UNITS dialog: model units checked before attaching the scan (metre selected).</figcaption></figure><figure><a href="images/cad_attach.jpg" data-lb><img loading="lazy" src="images/cad_attach.jpg" alt="Attach Point Cloud dialog with insertion point, scale and rotation settings."></a><figcaption><b>Fig. 6.2</b> Attach Point Cloud dialog with insertion point, scale and rotation settings.</figcaption></figure><figure><a href="images/cad_cloud.jpg" data-lb><img loading="lazy" src="images/cad_cloud.jpg" alt="Scan attached in AutoCAD: room outline with a measured dimension."></a><figcaption><b>Fig. 6.3</b> Scan attached in AutoCAD: room outline with a measured dimension.</figcaption></figure><figure><a href="images/cad_top.jpg" data-lb><img loading="lazy" src="images/cad_top.jpg" alt="Top view of the attached point cloud, ready for tracing."></a><figcaption><b>Fig. 6.4</b> Top view of the attached point cloud, ready for tracing.</figcaption></figure><figure><a href="images/cad_trace.jpg" data-lb><img loading="lazy" src="images/cad_trace.jpg" alt="Plan traced over the scan with the Polyline command, dimension added."></a><figcaption><b>Fig. 6.5</b> Plan traced over the scan with the Polyline command, dimension added.</figcaption></figure><figure><a href="images/cad_3d.jpg" data-lb><img loading="lazy" src="images/cad_3d.jpg" alt="3D view of the scan with the traced polyline outline (red)."></a><figcaption><b>Fig. 6.6</b> 3D view of the scan with the traced polyline outline (red).</figcaption></figure></div></div></section><section class="stage" id="s07"><div class="num">07</div><div class="body"><h2>Wall Flatness &amp; Plumbness Workflow</h2>
+<p class="lead">Using the scan to investigate walls before tile shop drawings, tested on the Office Bathroom Test 1 scan. Notes recorded 16 Feb 2023.</p>
+<h3>Preparing the scan</h3>
+<ol class="steps"><li>Investigate the RCP file for the given scanned data and select the RCS/RCP file in your folder.</li><li>Decide where a reference can be placed on the wall, from floor to wall.</li><li>Check the walls for protrusions, unevenness or unfinished masonry.</li><li>In AutoCAD, type ATTACH, open the file, crop in 3D, then use the top view and crop again to make an elevation where the floor and wall can be seen.</li><li>Convert .rcp to .e57 using ReCap Export (or the Leica app), cutting the section first so the inside of the wall can be analysed.</li></ol>
+<h3>FARO BuildIT: flatness</h3>
+<ol class="steps"><li>Launch FARO BuildIT and check the measurement units (metric, mm).</li><li>File &amp;gt; Import &amp;gt; Import E57 File Clouds.</li><li>Select the elevation with the Extract Surface tool (Plane, point cloud, constraint, tolerance 1).</li><li>Open Surface Deviation Analysis, set the colour scale and Create annotations with a tolerance of +1.5 / -1.5, then Apply.</li><li>Set Surface Annotation to read the flatness values. Red shows where the wall is not flat; green where it is flat.</li></ol>
+<div class="figs"><figure><a href="images/bi_units.jpg" data-lb><img loading="lazy" src="images/bi_units.jpg" alt="FARO BuildIT: measurement units set to Millimetre before any analysis."></a><figcaption><b>Fig. 7.1</b> FARO BuildIT: measurement units set to Millimetre before any analysis.</figcaption></figure><figure><a href="images/bi_cloud.jpg" data-lb><img loading="lazy" src="images/bi_cloud.jpg" alt="Scan imported into FARO BuildIT as an E57 cloud."></a><figcaption><b>Fig. 7.2</b> Scan imported into FARO BuildIT as an E57 cloud.</figcaption></figure><figure><a href="images/bi_menu.jpg" data-lb><img loading="lazy" src="images/bi_menu.jpg" alt="Extract Surface tool in the BuildIT toolbar."></a><figcaption><b>Fig. 7.3</b> Extract Surface tool in the BuildIT toolbar.</figcaption></figure><figure><a href="images/bi_panel.jpg" data-lb><img loading="lazy" src="images/bi_panel.jpg" alt="Extract Surface panel: surface type Plane, constraint and tolerance fields."></a><figcaption><b>Fig. 7.4</b> Extract Surface panel: surface type Plane, constraint and tolerance fields.</figcaption></figure><figure><a href="images/bi_crop.jpg" data-lb><img loading="lazy" src="images/bi_crop.jpg" alt="Cropped room scan, cut so the inside of the wall can be seen."></a><figcaption><b>Fig. 7.5</b> Cropped room scan, cut so the inside of the wall can be seen.</figcaption></figure><figure><a href="images/bi_plane.jpg" data-lb><img loading="lazy" src="images/bi_plane.jpg" alt="Extracted plane highlighted on the wall (yellow)."></a><figcaption><b>Fig. 7.6</b> Extracted plane highlighted on the wall (yellow).</figcaption></figure><figure><a href="images/bi_annot.jpg" data-lb><img loading="lazy" src="images/bi_annot.jpg" alt="Surface Inspection Annotation command."></a><figcaption><b>Fig. 7.7</b> Surface Inspection Annotation command.</figcaption></figure><figure><a href="images/bi_dev.jpg" data-lb><img loading="lazy" src="images/bi_dev.jpg" alt="Surface Deviation Analysis command."></a><figcaption><b>Fig. 7.8</b> Surface Deviation Analysis command.</figcaption></figure><figure><a href="images/bi_flat.jpg" data-lb><img loading="lazy" src="images/bi_flat.jpg" alt="Deviation colour map with annotation values: red marks areas that are not flat, green areas that are flat."></a><figcaption><b>Fig. 7.9</b> Deviation colour map with annotation values: red marks areas that are not flat, green areas that are flat.</figcaption></figure><figure><a href="images/bi_elev.jpg" data-lb><img loading="lazy" src="images/bi_elev.jpg" alt="Annotated deviation result on the extracted wall elevation, with colour scale."></a><figcaption><b>Fig. 7.10</b> Annotated deviation result on the extracted wall elevation, with colour scale.</figcaption></figure><figure><a href="images/bi_map.jpg" data-lb><img loading="lazy" src="images/bi_map.jpg" alt="Close-up of the colour map on the extracted wall surface."></a><figcaption><b>Fig. 7.11</b> Close-up of the colour map on the extracted wall surface.</figcaption></figure></div>
+<h3>FARO BuildIT: plumbness</h3>
+<ol class="steps"><li>Repeat the flatness workflow, then check the extracted plane faces the right way (Manager &gt; Surface &gt; Shaded, Surface normal).</li><li>Constraint &gt; Constraint Tangent &gt; pick axis, set (0,0,1) &gt; Apply.</li><li>Light grey shows the positive side of the surface and dark grey the negative side; the positive side is needed.</li><li>Set the same values as on the wall flatness workflow and apply to each surface.</li></ol>
+<h3>CloudCompare: plumbness by verticality</h3>
+<ol class="steps"><li>Open the .e57 file in CloudCompare (exported from ReCap).</li><li>Select the SOR tool to reduce and clean unnecessary points so the focus is the wall surface.</li><li>Tools &gt; Other &gt; Compute Geometric Features; tick Verticality.</li><li>Choose the preferred colour scale; the bar on the right shows whether the wall is plumb.</li></ol>
+<div class="figs"><figure><a href="images/cc_load.jpg" data-lb><img loading="lazy" src="images/cc_load.jpg" alt="CloudCompare: E57 file loaded."></a><figcaption><b>Fig. 8.1</b> CloudCompare: E57 file loaded.</figcaption></figure><figure><a href="images/cc_sor.jpg" data-lb><img loading="lazy" src="images/cc_sor.jpg" alt="SOR filter used to remove stray points so only the wall surface remains."></a><figcaption><b>Fig. 8.2</b> SOR filter used to remove stray points so only the wall surface remains.</figcaption></figure><figure><a href="images/cc_menu.jpg" data-lb><img loading="lazy" src="images/cc_menu.jpg" alt="Tools &gt; Other &gt; Compute geometric features."></a><figcaption><b>Fig. 8.3</b> Tools &gt; Other &gt; Compute geometric features.</figcaption></figure><figure><a href="images/cc_feat.jpg" data-lb><img loading="lazy" src="images/cc_feat.jpg" alt="Geometric features dialog with Verticality selected."></a><figcaption><b>Fig. 8.4</b> Geometric features dialog with Verticality selected.</figcaption></figure><figure><a href="images/cc_vert.jpg" data-lb><img loading="lazy" src="images/cc_vert.jpg" alt="Verticality scalar field with its colour scale; the bar on the right shows whether the wall is plumb."></a><figcaption><b>Fig. 8.5</b> Verticality scalar field with its colour scale; the bar on the right shows whether the wall is plumb.</figcaption></figure></div>
+</div></section><section class="stage" id="out"><div class="num">&#10003;</div><div class="body"><h2>Outcomes: Office Bathroom Test 1</h2>
+<ul class="outs"><li><b>Wall squareness</b>Checked with reference planes; the squareness of the wall was precise.</li><li><b>Flatness / plumbness</b>Protrusions and dips found; the deviation map showed the wall needing repair or construction to be plumb and ready for tiles.</li><li><b>Room dimensions</b>Scan scaled accurately; door height and width read as 2.09 m and 0.78 m, for preparing shop drawings.</li></ul>
+<div class="figs one"><figure><a href="images/out_green.jpg" data-lb><img loading="lazy" src="images/out_green.jpg" alt="Surface deviation map where green indicates the wall is within the set tolerance."></a><figcaption><b>Fig. 9.1</b> Surface deviation map where green indicates the wall is within the set tolerance.</figcaption></figure></div>
+<h3>Notes from the testing</h3><ul class="plain"><li>The files used were RCS, not RCP.</li><li>The wall inside must be worked out by cutting the scan; only the outside would otherwise be measured.</li><li>Surfaces are hard to navigate in BuildIT when they are not regular in shape; BuildIT needs a subscription.</li></ul></div></section>
+<section class="sec" id="tools"><h2>Software &amp; File Formats</h2>
+<table class="tools"><tr><th>Stage</th><th>Software</th><th>Format</th></tr>
+<tr><td>Scan &amp; transfer</td><td>BLK360 manager / mobile app</td><td>Scan files</td></tr>
+<tr><td>Registration &amp; publish</td><td>Cyclone REGISTER 360 (BLK Edition)</td><td>RCP (Cloud)</td></tr>
+<tr><td>Plotting to CAD</td><td>AutoCAD (ATTACH, UNITS, Polyline)</td><td>RCP / RCS</td></tr>
+<tr><td>Export for analysis</td><td>Autodesk ReCap</td><td>E57</td></tr>
+<tr><td>Flatness &amp; plumbness</td><td>FARO BuildIT, CloudCompare</td><td>E57</td></tr></table>
+<p class="note">Screenshots for stage 05 come from a Leica Cyclone REGISTER 360 tutorial video used as a reference; all other screenshots are from the test sessions in AutoCAD, FARO BuildIT and CloudCompare.</p></section>
+</main>
+<footer>BLK360 – Workflow Import to CAD · <a href="../">Erec Castillo – CV &amp; Portfolio</a></footer>
+<div id="lb" role="dialog" aria-modal="true"><div class="bar"><span id="cap"></span><span><button id="pv">&larr;</button> <button id="nx">&rarr;</button> <button id="cl">Close ✕</button></span></div><div class="sc" id="sc"><img id="im" alt=""></div></div>
+<script>
+(function(){var L=[].slice.call(document.querySelectorAll('[data-lb]')),i=0,lb=document.getElementById('lb'),im=document.getElementById('im'),cap=document.getElementById('cap'),sc=document.getElementById('sc');
+function show(n){i=(n+L.length)%L.length;var a=L[i];im.className='';sc.className='sc';im.src=a.href;cap.textContent=a.nextElementSibling?'':'';cap.textContent=a.parentNode.querySelector('figcaption').textContent;lb.classList.add('on');document.body.style.overflow='hidden'}
+function hide(){lb.classList.remove('on');document.body.style.overflow=''}
+L.forEach(function(a,n){a.addEventListener('click',function(e){e.preventDefault();show(n)})});
+im.onclick=function(){var z=im.classList.toggle('z');sc.classList.toggle('zs',z)};
+document.getElementById('cl').onclick=hide;document.getElementById('pv').onclick=function(){show(i-1)};document.getElementById('nx').onclick=function(){show(i+1)};
+lb.addEventListener('click',function(e){if(e.target===lb||e.target===sc)hide()});
+document.addEventListener('keydown',function(e){if(!lb.classList.contains('on'))return;if(e.key==='Escape')hide();if(e.key==='ArrowLeft')show(i-1);if(e.key==='ArrowRight')show(i+1)});})();
+</script>
+</body>
+</html>
