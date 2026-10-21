@@ -34,6 +34,8 @@ nav a:hover{color:#fff;border-color:var(--amber)}
 .hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(90deg,transparent,#000 70%)}
 .hero::after{content:"";position:absolute;width:520px;height:520px;border-radius:50%;right:-160px;top:-200px;background:radial-gradient(circle,rgba(242,163,58,.35),transparent 68%)}
 .hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:center;padding-top:76px;padding-bottom:84px}
+.hero .photo{display:block;width:150px;height:150px;border-radius:50%;object-fit:cover;border:4px solid var(--amber);box-shadow:0 6px 24px rgba(0,0,0,.35);margin:0 0 22px}
+@media(max-width:860px){.hero .photo{width:120px;height:120px}}
 .hero h1{color:#fff;font-size:clamp(2.7rem,7vw,5rem);font-weight:800;letter-spacing:-.02em}
 .hero .role{display:inline-block;margin:16px 0 0;padding:5px 14px;border-radius:99px;background:rgba(242,163,58,.16);color:var(--amber);font-weight:600;font-size:1rem;border:1px solid rgba(242,163,58,.5)}
 .hero .lead{max-width:54ch;color:#CFDCEA;margin:20px 0 0;font-size:1.06rem}
@@ -145,6 +147,7 @@ footer .cvmsg{margin:12px 0 0;font-size:.92rem;min-height:1.4em;color:var(--ambe
 
 <header class="hero" id="top"><div class="wrap">
   <div>
+    <img class="photo" src="erec-photo.jpg" alt="Erec Castillo" width="150" height="150">
     <h1>Erec Castillo</h1>
     <p class="role">AutoCAD Drafter / Drafting Officer</p>
     <p class="lead">Over 10 years of producing shop drawings, construction drawings and as-built documentation for telecommunications, broadcast, and architectural and interior fit-out projects. Currently supporting an Australian client on tile layout and fit-out drafting.</p>
@@ -261,7 +264,7 @@ footer .cvmsg{margin:12px 0 0;font-size:.92rem;min-height:1.4em;color:var(--ambe
     <div class="sg" style="--c:#16406B"><h3>CAD and design</h3><ul class="chips"><li>AutoCAD</li><li>SketchUp 3D</li><li>Revit MEP</li><li>Adobe Photoshop (CS5/CS6)</li></ul></div>
     <div class="sg" style="--c:#C77A0E"><h3>Estimating</h3><ul class="chips"><li>CostX</li></ul></div>
     <div class="sg" style="--c:#0F8B8D"><h3>Drafting and coordination</h3><ul class="chips"><li>Shop drawings</li><li>Construction drawings</li><li>As-built documentation</li><li>Tile set-out plans</li><li>Drawing checking</li><li>Coordination with contractors and project managers</li></ul></div>
-    <div class="sg" style="--c:#5B6773"><h3>Office and other tools</h3><ul class="chips"><li>MS Word</li><li>Excel</li><li>PowerPoint</li><li>Visio</li><li>Wondershare (video editing)</li><li>Basic Visual Basic</li></ul></div>
+    <div class="sg" style="--c:#5B6773"><h3>Office and other tools</h3><ul class="chips"><li>MS Word</li><li>Excel</li><li>PowerPoint</li><li>Visio</li><li>PDF-XChange Editor</li><li>Wondershare (video editing)</li><li>Basic Visual Basic</li></ul></div>
   </div>
 </div></section>
 
@@ -277,10 +280,11 @@ footer .cvmsg{margin:12px 0 0;font-size:.92rem;min-height:1.4em;color:var(--ambe
 
 <section id="templates" class="s-tpl"><div class="wrap">
   <h2>Templates</h2>
-  <p class="sub">Add your reusable drafting templates here when you are ready to share them.</p>
+  <p class="sub">Reusable drafting templates, workflow guides and sample drawing sheets.</p>
   <div class="grid">
     <article class="card" style="--c:var(--teal)"><h3>Bathroom Waterproofing Design Checklist</h3><p>Choose the shower build and get the waterproofing detail, the extent of work, a level check, and a checklist each for the drafting team and for site.</p><dl><div class="row"><dt>Format: </dt><dd>Interactive HTML tool</dd></div></dl><a class="go" href="Bathroom_Waterproofing_Design_Checklist_Fb.html" target="_blank" rel="noopener">Open checklist &rarr;</a></article>
-    <article class="card draft"><h3>Template slot</h3><p>Add a title, a short description and a file link.</p></article>
+    <article class="card" style="--c:var(--amber)"><h3>BLK360 Workflow Import to CAD</h3><p>Step-by-step workflow for bringing BLK360 scan data into CAD for tile layout and set-out plans.</p><dl><div class="row"><dt>Format: </dt><dd>Workflow guide (web page)</dd></div></dl><a class="go" href="blk360/">Open workflow &rarr;</a></article>
+    <article class="card" style="--c:#16406B"><h3>Tile Shop Drawings</h3><p>Sample sheets: bathroom, kitchen and laundry set-out elevations, internal wet area details, and external balcony and walkway connection details.</p><dl><div class="row"><dt>Format: </dt><dd>Drawing sheets (web page)</dd></div></dl><a class="go" href="shop-drawings/">View drawing sheets &rarr;</a></article>
   </div>
 </div></section>
 
